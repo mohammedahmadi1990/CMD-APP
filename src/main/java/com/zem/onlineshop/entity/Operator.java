@@ -10,7 +10,7 @@ public class Operator extends User {
     }
 
     public Operator(int id, String firstName, String lastName, Date birthDate, String phoneNumber, boolean phoneNumberVerified, String email, boolean emailVerified, String userType, String username, String password, String operatorType) {
-        super(id, firstName, lastName, birthDate, phoneNumber, phoneNumberVerified, email, emailVerified, userType, username, password);
+        super(id, firstName, lastName, birthDate, phoneNumber, phoneNumberVerified, email, emailVerified, username, password);
         this.operatorType = operatorType;
     }
 

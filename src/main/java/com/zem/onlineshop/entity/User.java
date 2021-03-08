@@ -21,7 +21,7 @@ abstract public class User {
     public User() {
     }
 
-    public User(int id, String firstName, String lastName, Date birthDate, String phoneNumber, boolean phoneNumberVerified, String email, boolean emailVerified, String userType, String username, String password) {
+    public User(int id, String firstName, String lastName, Date birthDate, String phoneNumber, boolean phoneNumberVerified, String email, boolean emailVerified, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,7 +30,6 @@ abstract public class User {
         this.phoneNumberVerified = phoneNumberVerified;
         this.email = email;
         this.emailVerified = emailVerified;
-        this.userType = userType;
         this.username = username;
         this.password = password;
     }
@@ -97,14 +96,6 @@ abstract public class User {
 
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
     }
 
     public String getUsername() {

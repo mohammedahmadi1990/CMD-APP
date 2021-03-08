@@ -1,22 +1,26 @@
 package com.zem.onlineshop.entity;
 
+import java.util.Date;
+
 public class Purchase {
 
     private int id;
-    private User user;
+    private Customer customer;
     private String fiatType;
     private double fiat;
     private Invoice invoice;
+    private Date date;
 
     public Purchase() {
     }
 
-    public Purchase(int id, User user, String fiatType, double fiat, Invoice invoice) {
+    public Purchase(int id, Customer customer, String fiatType, double fiat, Invoice invoice, Date date) {
         this.id = id;
-        this.user = user;
+        this.customer = customer;
         this.fiatType = fiatType;
         this.fiat = fiat;
         this.invoice = invoice;
+        this.date = date;
     }
 
     public int getId() {
@@ -27,12 +31,12 @@ public class Purchase {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public String getFiatType() {
@@ -57,5 +61,13 @@ public class Purchase {
 
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
