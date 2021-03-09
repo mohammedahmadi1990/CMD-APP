@@ -5,7 +5,7 @@ import java.util.Date;
 public class Purchase {
 
     private int id;
-    private Customer customer;
+    private User user;
     private String fiatType;
     private double fiat;
     private Invoice invoice;
@@ -14,9 +14,9 @@ public class Purchase {
     public Purchase() {
     }
 
-    public Purchase(int id, Customer customer, String fiatType, double fiat, Invoice invoice, Date date) {
+    public Purchase(int id, User user, String fiatType, double fiat, Invoice invoice, Date date) {
         this.id = id;
-        this.customer = customer;
+        this.user = user;
         this.fiatType = fiatType;
         this.fiat = fiat;
         this.invoice = invoice;
@@ -31,12 +31,12 @@ public class Purchase {
         this.id = id;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getFiatType() {

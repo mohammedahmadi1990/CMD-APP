@@ -2,26 +2,25 @@ package com.zem.onlineshop.entity;
 
 import java.util.Date;
 
-abstract public class User {
+public class User {
 
     private int id;
     private String firstName;
     private String lastName;
     private Date birthDate;
-
     private String phoneNumber;
     private boolean phoneNumberVerified;
     private String email;
     private boolean emailVerified;
     private String userType;
-
     private String username;
     private String password;
+
 
     public User() {
     }
 
-    public User(int id, String firstName, String lastName, Date birthDate, String phoneNumber, boolean phoneNumberVerified, String email, boolean emailVerified, String username, String password) {
+    public User(int id, String firstName, String lastName, Date birthDate, String phoneNumber, boolean phoneNumberVerified, String email, boolean emailVerified, String userType, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,6 +29,7 @@ abstract public class User {
         this.phoneNumberVerified = phoneNumberVerified;
         this.email = email;
         this.emailVerified = emailVerified;
+        this.userType = userType;
         this.username = username;
         this.password = password;
     }
@@ -96,6 +96,14 @@ abstract public class User {
 
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public String getUsername() {

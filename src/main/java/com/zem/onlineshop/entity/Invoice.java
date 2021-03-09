@@ -12,7 +12,7 @@ public class Invoice {
     private double totalDiscount;
     private double totalCargo;
     private double totalPrice;
-    private Customer customer;
+    private User user;
     private Address address;
     private String status;
     private String localCargoReference;
@@ -20,7 +20,7 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(String id, Date purchaseDate, List<Product> products, double weight, double totalDiscount, double totalCargo, double totalPrice, Customer customer, Address address, String status, String localCargoReference) {
+    public Invoice(String id, Date purchaseDate, List<Product> products, double weight, double totalDiscount, double totalCargo, double totalPrice, User user, Address address, String status, String localCargoReference) {
         this.id = id;
         this.purchaseDate = purchaseDate;
         this.products = products;
@@ -28,7 +28,7 @@ public class Invoice {
         this.totalDiscount = totalDiscount;
         this.totalCargo = totalCargo;
         this.totalPrice = totalPrice;
-        this.customer = customer;
+        this.user = user;
         this.address = address;
         this.status = status;
         this.localCargoReference = localCargoReference;
@@ -90,12 +90,12 @@ public class Invoice {
         this.totalPrice = totalPrice;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getStatus() {

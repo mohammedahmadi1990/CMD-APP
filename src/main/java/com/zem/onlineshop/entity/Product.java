@@ -13,7 +13,6 @@ public class Product {
     private double cargoPrice;
     private String productType;
 
-
     public Product() {
     }
 

@@ -10,19 +10,19 @@ public class Cart {
     private double totalDiscount;
     private double totalCargo;
     private double totalPrice;
-    private Customer customer;
+    private User user;
 
     public Cart() {
     }
 
-    public Cart(String id, List<Product> products, double totalWeight, double totalDiscount, double totalCargo, double totalPrice, Customer customer) {
+    public Cart(String id, List<Product> products, double totalWeight, double totalDiscount, double totalCargo, double totalPrice, User user) {
         this.id = id;
         this.products = products;
         this.totalWeight = totalWeight;
         this.totalDiscount = totalDiscount;
         this.totalCargo = totalCargo;
         this.totalPrice = totalPrice;
-        this.customer = customer;
+        this.user = user;
     }
 
     public String getId() {
@@ -73,11 +73,11 @@ public class Cart {
         this.totalPrice = totalPrice;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,86 +1,100 @@
-CREATE database ZemDatabase;
+DROP SCHEMA IF EXISTS `zemdatabase`;
+CREATE DATABASE `zemdatabase` CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-use ZemDatabase;
+USE `zemdatabase`;
+SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE TABLE address(id INT (8), User int(10),
-country VARCHAR (45) , state VARCHAR (45), city VARCHAR (45), addressDetail VARCHAR (50), postalCode INT (10),
-PRIMARY KEY (id));
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `address`;
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `cart`;
+DROP TABLE IF EXISTS `user_log`;
+DROP TABLE IF EXISTS `purchase`;
+DROP TABLE IF EXISTS `invoice`;
 
-CREATE TABLE product(id INT (8), name VARCHAR (45),
-link VARCHAR (100) , website VARCHAR (45), price_tl DOUBLE (45), price_rial DOUBLE (45), price_dollar DOUBLE (45), weight DOUBLE (50), cargo_price DOUBLE (10), product_type VARCHAR (20),
-PRIMARY KEY (id));
+CREATE TABLE `user`(
+    `id` INT, `firstname` VARCHAR (45),
+    `lastname` VARCHAR (45) , `birth_date` DATE,
+    `phone_number` VARCHAR (45), `phone_number_verified` BIT (1),
+    `email` VARCHAR (45), `email_verified` BIT (1),
+    `user_type` VARCHAR (45), `username` VARCHAR (50), `password` VARCHAR (10),
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE cart(id INT (8), name VARCHAR (45),
-link VARCHAR (100) , website VARCHAR (45), price_tl double (45), price_rial double (45), price_dollar double (45), weight double (50), cargo_price double (10), product_type varchar (20),
-PRIMARY KEY (id));
+CREATE TABLE `address`(
+    `id` INT, `user_id` INT,
+    `country` VARCHAR (45) , `state` VARCHAR (45),
+    `city` VARCHAR (45), `address_detail` VARCHAR (100), `postal_code` INT,
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE customer(id INT (10), firstname VARCHAR (45),
-lastname VARCHAR (45) , birth_date DATE (45), phone_number VARCHAR (45), phone_number_verified VARCHAR (50), email INT (10), email_verified DATE (45), operator_type VARCHAR (45), username VARCHAR (50), password INT (10),
-PRIMARY KEY (id));
+CREATE TABLE `user_log`(
+    `id` INT, `user_id` INT,
+    `date` DATE, `description` VARCHAR (100),
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE operator(id INT (10), firstname VARCHAR (45),
-lastname VARCHAR (45) , birth_date DATE (45), phone_number VARCHAR (45), phone_number_verified VARCHAR (50), email INT (10), email_verified DATE (45), user_type VARCHAR (45), username VARCHAR (50), password INT (10), customer_type VARCHAR (45),
-PRIMARY KEY (id));
+CREATE TABLE `product`(
+    `id` INT, `name` VARCHAR (45),
+    `link` VARCHAR (100) , `website` VARCHAR (45),
+    `price_tl` DECIMAL (10,2), `price_rial` DECIMAL (10,2),
+    `price_dollar` DECIMAL (10,2), `weight` DECIMAL(10,2) ,
+    `cargo_price` DECIMAL (10,2), `product_type` VARCHAR (20),
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE user_log(id INT (11), user_id INT (11), customer_id INT (11), date DATE (45) , description VARCHAR (100),
-PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES user(id), FOREIGN KEY (customer_id) REFERENCES customer(id));
+CREATE TABLE `cart`(
+    `id` INT, `product_id` INT, `name` VARCHAR (45),
+    `link` VARCHAR (100) , `website` VARCHAR (45),
+    `price_tl` DECIMAL (10,2), `price_rial` DECIMAL (10,2),
+    `price_dollar` DECIMAL (10,2), `weight` DECIMAL (10,2),
+    `cargo_price`DECIMAL (10,2), `product_type` VARCHAR (20), `user_id` INT,
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    KEY `fk_product_idx` (`product_id`),
+    CONSTRAINT `FK_product`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE purchase(id INT (11), customer_id INT (11), fiat_type VARCHAR (30),fiat VARCHAR (45), invoice_id INT (11), date DATE (45),
-PRIMARY KEY (id), FOREIGN KEY (invoice_id) REFERENCES invoice(id));
+CREATE TABLE `invoice`(
+    `id` INT, `purchase_date` DATE, `product_id` INT,
+    `weight` DECIMAL (10,2),`total_discount` DECIMAL (10,2),
+    `total_cargo` DECIMAL (10,2),`total_price` DECIMAL (10,2),
+    `user_id` INT, `address_id` INT,
+    `status` VARCHAR (30),`local_cargo_reference` VARCHAR (45),
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    FOREIGN KEY (`address_id`) REFERENCES `address`(`id`),
+    KEY `fk_product_idx` (`product_id`),
+    CONSTRAINT `FK1_product`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE invoice(id INT (11), purchase_date DATE (11), fiat_type VARCHAR (30),fiat VARCHAR (45), invoice_id INT (11), date DATE (45),
-PRIMARY KEY (id), FOREIGN KEY (invoice_id) REFERENCES invoice(id));
+CREATE TABLE `purchase`(
+    `id` INT, `user_id` INT,
+    `fiat_type` VARCHAR (30), `fiat` DECIMAL (10,2),
+    `invoice_id` INT, `date` DATE,
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`), FOREIGN KEY (`invoice_id`) REFERENCES `invoice`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-create table programs_scheduled( scheduled_program_id varchar(15),
-program_name varchar(50), location varchar(10), start_date date, end_date date,
-sessions_per_week int(2), PRIMARY KEY(scheduled_program_id),
-FOREIGN KEY (program_name) REFERENCES programs_offered(program_name));
 
-create table application(application_id int(8), full_name varchar(30), date_of_birth date,
-highest_qualification varchar(10), marks_obtained float(5,2), email_id varchar(50),
-scheduled_program_id varchar(15), status varchar(10), date_of_interview date, PRIMARY KEY (application_id),
-UNIQUE (email_id),FOREIGN KEY (scheduled_program_id) REFERENCES programs_scheduled(scheduled_program_id));
+--
+-- Dumping data for table `user`
+--
+INSERT INTO `user` VALUES
+	(10001,'Mohammed','Ahmadi','1990-01-27','+905362933709',0,'mohammed.ahmadi1990@gmail.com',1,'admin','mahmadi','123'),
+	(10002,'John','Doe','1980-01-01','+901234533890',1,'john.doe@gmail.com',1,'customer','jdoe','123e'),
+	(10003,'Ajay','Rao','1991-03-24','+901232467890',1,'ajay.rao@gmail.com',1,'customer','arao','123o'),
+	(10004,'Mary','Public','1984-05-28','+900134567890',0,'mary.public@gmail.com',1,'customer','mpublic','123c'),
+	(10005,'Maxwell','Dixon','1998-10-11','+901234563450',0,'maxwell.dixon@gmail.com',1,'operator','mdixon','123n');
 
-create table Participant (roll_no varchar(5), email_id varchar(50), application_id varchar(6) , scheduled_program_id varchar(10),
-PRIMARY KEY(roll_no), FOREIGN KEY (application_id) REFERENCES application(application_id));
 
-create table users (username varchar(10), password varchar(30), role varchar(6),
-PRIMARY KEY(username));
-
-insert into users values('manu','manu','admin');
-insert into users values('member1','password123','member');
-insert into users values('member2','test123','member');
-
-insert into programs_offered values('Electrical and Electronic Engineering','Electrical engineering deals design, develop, test, and supervise the manufacturing of electrical equipment, such as electric motors, radar and navigation systems, communications systems, or power generation equipment.','12th or Diploma in EEE',18,'BE in Electrical & Electronics Engineering','http://www.indiaeducation.net/imagesvr_ce/9763/electrical.jpg');
-insert into programs_offered values('Electronics and Communication Engineering','Electronics engineering deals design, develop and test components, devices, systems or equipment that use electricity as part of their source of power. These components include capacitors, diodes, resistors and transistors.','12th or Diploma in ECE',18,'BE in Electronics & Communication Engineering','https://www.ecs.soton.ac.uk/sites/www.ecs.soton.ac.uk/files/ECS-embedded-system-boxgrid-480x297.png');
-insert into programs_offered values('Civil Engineering','Civil engineering deals with the plan, design, construction, and maintenance of the physical and naturally built environment, including public works such as roads, bridges, canals, dams, airports, sewerage systems, pipelines, structural components of buildings, and railways.','12th or Diploma in Civil',18,'BE in Civil Engineering','http://www.ravanchal.com/wp-content/uploads/2018/04/outsource-civil-engineering-services.jpg');
-insert into programs_offered values('Mechanical Engineering','Understand the core areas including mechanics, dynamics, thermodynamics, materials science, structural analysis, and electricity.','12th or Diploma in Mechanical',18,'BE in Mechanical Engineering','https://www.jabil.com/content/dam/images/hero-images/20170428-cap-mechanical-design.png.transform/pageHero/image.20170428-cap-mechanical-design.jpg');
-
-insert into programs_scheduled values('ee12','Electrical and Electronic Engineering','Bangalore','2019-06-12','2019-07-12',2);
-insert into programs_scheduled values('ec19ma1','Electronics and Communication Engineering','Bangalore','2019-06-12','2019-07-12',2);
-
-insert into application values(1,'Manoj Kumar', '1995-3-16', 'Diploma', 65.65, 'manu@gmail.com', 'ee12dv1','Pending',null);
-
-ALTER TABLE `university_admission_system`.`application` CHANGE COLUMN `application_id` `application_id` INT(8) NOT NULL AUTO_INCREMENT  ;
-
-delimiter &
-CREATE PROCEDURE getAllProgramsName()
-BEGIN
-SELECT * FROM programs_offered;
-END &
-delimiter ;
-
-delimiter &
-CREATE PROCEDURE getAllScheduledPrograms()
-BEGIN
-SELECT * FROM programs_scheduled;
-END &
-delimiter ;
-
-delimiter &
-CREATE PROCEDURE getAllApplications()
-BEGIN
-SELECT * FROM application;
-END &
-delimiter ;
-
+--
+-- Dumping data for table `address`
+--
+INSERT INTO `address` VALUES
+	(1,10004,'Iran','Azerbaijan','Tabriz','Address01 detail Address01 detail Address01 detail ',1346123),
+	(2,10001,'Turkey','Istanbul','Istanbul','Address01 detail Address01 detail ',1346123),
+	(3,10003,'Brazil','Rio','Rio','Address01 detail Address01 detail ',1346123),
+	(4,10002,'USA','Iowa','Iowa','Address01 detail Address01 detail Address01 detail Address01 detail ',1346123),
+	(5,10005,'Sweden','Lund','Lund','Address01 detail ',1346123);
