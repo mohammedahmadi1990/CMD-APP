@@ -1,0 +1,107 @@
+DROP SCHEMA IF EXISTS `zemdatabase`;
+CREATE DATABASE `zemdatabase`
+    CHARACTER SET utf8
+    COLLATE utf8_unicode_ci;
+
+CREATE USER 'developer01'@'localhost' IDENTIFIED BY '123321';
+GRANT ALL PRIVILEGES ON zemdatabase.* TO 'developer01'@'localhost';
+ALTER USER 'developer01'@'localhost' IDENTIFIED WITH mysql_native_password BY '123321';
+FLUSH PRIVILEGES;
+
+USE `zemdatabase`;
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `address`;
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `cart`;
+DROP TABLE IF EXISTS `user_log`;
+DROP TABLE IF EXISTS `purchase`;
+DROP TABLE IF EXISTS `invoice`;
+
+CREATE TABLE `user`(
+    `id` INT, `firstname` VARCHAR (45),
+    `lastname` VARCHAR (45) , `birth_date` DATE,
+    `phone_number` VARCHAR (45), `phone_number_verified` BIT (1),
+    `email` VARCHAR (45), `email_verified` BIT (1),
+    `user_type` VARCHAR (45), `username` VARCHAR (50), `password` VARCHAR (10),
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `address`(
+    `id` INT, `user_id` INT,
+    `country` VARCHAR (45) , `state` VARCHAR (45),
+    `city` VARCHAR (45), `address_detail` VARCHAR (100), `postal_code` INT,
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_log`(
+    `id` INT, `user_id` INT,
+    `date` DATE, `description` VARCHAR (100),
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `product`(
+    `id` INT, `name` VARCHAR (45),
+    `link` VARCHAR (100) , `website` VARCHAR (45),
+    `price_tl` DECIMAL (10,2), `price_rial` DECIMAL (10,2),
+    `price_dollar` DECIMAL (10,2), `weight` DECIMAL(10,2) ,
+    `cargo_price` DECIMAL (10,2), `product_type` VARCHAR (20),
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `cart`(
+    `id` INT, `product_id` INT, `name` VARCHAR (45),
+    `link` VARCHAR (100) , `website` VARCHAR (45),
+    `price_tl` DECIMAL (10,2), `price_rial` DECIMAL (10,2),
+    `price_dollar` DECIMAL (10,2), `weight` DECIMAL (10,2),
+    `cargo_price`DECIMAL (10,2), `product_type` VARCHAR (20), `user_id` INT,
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    KEY `fk_product_idx` (`product_id`),
+    CONSTRAINT `FK_product`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `invoice`(
+    `id` INT, `purchase_date` DATE, `product_id` INT,
+    `weight` DECIMAL (10,2),`total_discount` DECIMAL (10,2),
+    `total_cargo` DECIMAL (10,2),`total_price` DECIMAL (10,2),
+    `user_id` INT, `address_id` INT,
+    `status` VARCHAR (30),`local_cargo_reference` VARCHAR (45),
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    FOREIGN KEY (`address_id`) REFERENCES `address`(`id`),
+    KEY `fk_product_idx` (`product_id`),
+    CONSTRAINT `FK1_product`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `purchase`(
+    `id` INT, `user_id` INT,
+    `fiat_type` VARCHAR (30), `fiat` DECIMAL (10,2),
+    `invoice_id` INT, `date` DATE,
+    PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user`(`id`), FOREIGN KEY (`invoice_id`) REFERENCES `invoice`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Dumping data for table `user`
+--
+INSERT INTO `user` VALUES
+	(10001,'Mohammed','Ahmadi','1990-01-27','+905362933709',0,'mohammed.ahmadi1990@gmail.com',1,'admin','mahmadi','123'),
+	(10002,'John','Doe','1980-01-01','+901234533890',1,'john.doe@gmail.com',1,'customer','jdoe','123e'),
+	(10003,'Ajay','Rao','1991-03-24','+901232467890',1,'ajay.rao@gmail.com',1,'customer','arao','123o'),
+	(10004,'Mary','Public','1984-05-28','+900134567890',0,'mary.public@gmail.com',1,'customer','mpublic','123c'),
+	(10005,'Maxwell','Dixon','1998-10-11','+901234563450',0,'maxwell.dixon@gmail.com',1,'operator','mdixon','123n');
+
+
+--
+-- Dumping data for table `address`
+--
+INSERT INTO `address` VALUES
+	(1,10004,'Iran','Azerbaijan','Tabriz','Address01 detail Address01 detail Address01 detail ',1346123),
+	(2,10001,'Turkey','Istanbul','Istanbul','Address01 detail Address01 detail ',1346123),
+	(3,10003,'Brazil','Rio','Rio','Address01 detail Address01 detail ',1346123),
+	(4,10002,'USA','Iowa','Iowa','Address01 detail Address01 detail Address01 detail Address01 detail ',1346123),
+	(5,10005,'Sweden','Lund','Lund','Address01 detail ',1346123);
