@@ -1,5 +1,12 @@
 DROP SCHEMA IF EXISTS `zemdatabase`;
-CREATE DATABASE `zemdatabase` CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE DATABASE `zemdatabase`
+    CHARACTER SET utf8
+    COLLATE utf8_unicode_ci;
+
+CREATE USER 'developer01'@'localhost' IDENTIFIED BY '123321';
+GRANT ALL PRIVILEGES ON zemdatabase.* TO 'developer01'@'localhost';
+ALTER USER 'developer01'@'localhost' IDENTIFIED WITH mysql_native_password BY '123321';
+FLUSH PRIVILEGES;
 
 USE `zemdatabase`;
 SET FOREIGN_KEY_CHECKS = 0;
