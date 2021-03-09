@@ -1,19 +1,45 @@
 package com.zem.onlineshop.entity;
 
 import java.util.Date;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "user")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "firstname")
     private String firstName;
+
+    @Column(name = "lastname")
     private String lastName;
+
+    @Column(name = "birth_date")
     private Date birthDate;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "phone_number_verified")
     private boolean phoneNumberVerified;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "email_verified")
     private boolean emailVerified;
+
+    @Column(name = "user_type")
     private String userType;
+
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "password")
     private String password;
 
 
