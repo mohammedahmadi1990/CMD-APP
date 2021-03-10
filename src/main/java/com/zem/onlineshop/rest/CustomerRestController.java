@@ -23,7 +23,7 @@ public class CustomerRestController {
         return customerDAO.findAll();
     }
 
-    @GetMapping("/Customers/{customerId}")
+    @GetMapping("/customers/{customerId}")
     public User getCustomer(@PathVariable int customerId){
         User user = customerDAO.findById(customerId);
         if(user == null){
@@ -32,20 +32,20 @@ public class CustomerRestController {
         return user;
     }
 
-    @PostMapping("/Customers/{customerId}")
-    public User addCustomer(@RequestBody User customer){
-        customer.setId(0);
-        customerDAO.save(customer);
-        return customer;
+    @PostMapping("/customers")
+    public User addCustomer(@RequestBody User user){
+        user.setId(0);
+        customerDAO.save(user);
+        return user;
     }
 
-    @PutMapping("/Customers")
-    public User updateCustomer(@RequestBody User customer){
-        customerDAO.save(customer);
-        return customer;
+    @PutMapping("/customers")
+    public User updateCustomer(@RequestBody User user){
+        customerDAO.save(user);
+        return user;
     }
 
-    @DeleteMapping("/Customers/{customerId}")
+    @DeleteMapping("/customers/{customerId}")
     public String deleteCustomer(@PathVariable int  customerId){
         User user = customerDAO.findById(customerId);
         if(user == null){

@@ -49,6 +49,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Transactional
     public void deleteById(int id) {
         Session currentSession = entityManager.unwrap(Session.class);
-        currentSession.delete(id);
+        Query<User> query = currentSession.createQuery("DELETE FROM User AS u WHERE u.id=?1", User.class);
+        query.setParameter(1,"customer");
+        query.executeUpdate();
     }
 }
